@@ -18,6 +18,11 @@ namespace Cast.Test
         [TestMethod]
         public void reinterpret_test()
         {
+            OnError += (e) =>
+            {
+                Debug.WriteLine(e.Message);
+            };
+
             //bytes test
             var raw = new byte[] {1, 5, 255, 3, 4, 10, 15, 2, 3, 5};
 

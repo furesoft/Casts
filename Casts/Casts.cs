@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,6 +13,13 @@ namespace Casts
     {
         public static bool OnlyUnsafeContext { get; set; } = true;
         public static List<ICastProvider> Providers = new List<ICastProvider>();
+
+        public static event Action<Exception> OnError;
+
+        static void RaiseOnError(Exception ex)
+        {
+            OnError?.Invoke(ex);
+        }
 
         static Casts()
         {
@@ -61,17 +67,25 @@ namespace Casts
         public static T struct_cast<T>(object obj)
             where T : struct
         {
-            int size = Marshal.SizeOf(obj);
-            byte[] buffer = new byte[size];
+            try
+            {
+                int size = Marshal.SizeOf(obj);
+                byte[] buffer = new byte[size];
 
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(obj, ptr, true);
-            Marshal.Copy(ptr, buffer, 0, size);
-            
-            var res = (T)Marshal.PtrToStructure(ptr, typeof(T));
-            Marshal.FreeHGlobal(ptr);
+                IntPtr ptr = Marshal.AllocHGlobal(size);
+                Marshal.StructureToPtr(obj, ptr, true);
+                Marshal.Copy(ptr, buffer, 0, size);
 
-            return res;
+                var res = (T) Marshal.PtrToStructure(ptr, typeof (T));
+                Marshal.FreeHGlobal(ptr);
+                return res;
+            }
+            catch (Exception ex)
+            {
+                RaiseOnError(ex);
+            }
+
+            return default(T);
         }
 
 
@@ -114,8 +128,9 @@ namespace Casts
                 var primitive = PrimitiveCast(val, T, t, bytes);
                 if(primitive != null) return primitive;
             }
-
-            throw new InvalidCastException($"Cant cast from '{val.GetType().Name}' to '{T.Name}'");
+            
+            RaiseOnError(new InvalidCastException($"Cant cast from '{val.GetType().Name}' to '{T.Name}'"));
+            return null;
         }
 
         static object PrimitiveCast(object val, Type T, TypeCode t, byte[] bytes)
