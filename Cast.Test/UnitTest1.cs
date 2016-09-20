@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -23,6 +24,19 @@ namespace Cast.Test
             {
                 Debug.WriteLine(e.Message);
             };
+            //time test
+            var timeL = Time(()=> { var l = (long) 123; });
+            var timeI = Time(() => { var l = (int)123L; });
+
+            var timeRL = Time(() => { reinterprete_cast<long>(123); });
+            var timeRI = Time(() => { reinterprete_cast<int>(123L); });
+
+            //bitarray test
+            var ba = new BitArray(32);
+            ba.SetAll(true);
+
+            var baI = reinterprete_cast<int>(ba);
+            var Iba = reinterprete_cast<BitArray>((short)255);
 
             //bytes test
             var raw = new byte[] {1, 5, 255, 3, 4, 10, 15, 2, 3, 5};
@@ -57,12 +71,6 @@ namespace Cast.Test
             var cr = reinterprete_cast<int>(c);
             var u = reinterprete_cast<uint>(-1);
 
-            var lambda = new Action<string>((_) => Debug.WriteLine(_));
-            var callable = reinterprete_cast<ICallable>(lambda);
-            callable.Call("Hello World");
-
-            var func = reinterprete_cast<Action<string>>(callable);
-            func("Hello Cast");
 
             var g = Guid.NewGuid();
             var rGu = reinterprete_cast<byte[]>(g);
@@ -74,11 +82,7 @@ namespace Cast.Test
             var same = reinterprete_cast<int>(1234);
             var call = reinterprete_cast<Action>(sD);
             call();
-
-            var expr = reinterprete_cast<Expression>(call);
-
-            var strm = reinterprete_cast<MemoryStream>(new FileStream("test.txt", FileMode.Open));
-
+           
             var rp = new Vector2(10, 10);
             var lp = reinterprete_cast<long>(rp);
             var rep = reinterprete_cast<Vector2>(lp);
@@ -106,6 +110,8 @@ namespace Cast.Test
             var ipL = reinterprete_cast<int>(ip);
             var ipP = reinterprete_cast<IPAddress>(ipL);
         }
+
+        
     }
 
     public struct Vector2

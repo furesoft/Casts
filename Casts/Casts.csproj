@@ -45,14 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Casts.cs" />
-    <Compile Include="ICallable.cs" />
     <Compile Include="ICastProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\BigIntegerProvider.cs" />
-    <Compile Include="Providers\CallProvider.cs" />
+    <Compile Include="Providers\BitArrayProvider.cs" />
     <Compile Include="Providers\DateTimeProvider.cs" />
-    <Compile Include="Providers\DynamicCallProvider.cs" />
-    <Compile Include="Providers\ExpressionCast.cs" />
     <Compile Include="Providers\GuidProvider.cs" />
     <Compile Include="Providers\IPAddressProvider.cs" />
     <Compile Include="Providers\MethodBodyProvider.cs" />
@@ -60,7 +57,6 @@
     <Compile Include="Providers\RectangleProvider.cs" />
     <Compile Include="Providers\PointProvider.cs" />
     <Compile Include="Providers\SizeProvider.cs" />
-    <Compile Include="Providers\StreamProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -24,17 +25,14 @@ namespace Casts
         {
             Providers.Add(new SizeProvider());
             Providers.Add(new PointProvider());
-            Providers.Add(new CallProvider());
-            Providers.Add(new DynamicCallProvider());
-            Providers.Add(new ExpressionCast());
             Providers.Add(new GuidProvider());
-            Providers.Add(new StreamProvider());
             Providers.Add(new MethodBodyProvider());
             Providers.Add(new DateTimeProvider());
             Providers.Add(new BigIntegerProvider());
             Providers.Add(new ColorProvider());
             Providers.Add(new RectangleProvider());
             Providers.Add(new IPAddressProvider());
+            Providers.Add(new BitArrayProvider());
         }
 
         #region Multiple Cast
@@ -92,12 +90,6 @@ namespace Casts
 #endif
         static object reinterprete_cast(object val, Type T)
         {
-            foreach (var castProvider in Providers)
-            {
-                var ret = castProvider.Cast(val, T);
-                if (ret != null) return ret;
-            }
-
             byte[] bytes = GetBytes(val);
             
             //primtive
@@ -129,6 +121,16 @@ namespace Casts
             
             RaiseOnError(new InvalidCastException($"Cant cast from '{val.GetType().Name}' to '{T.Name}'"));
             return null;
+        }
+
+        public static TimeSpan Time(Action a)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            a();
+            sw.Stop();
+
+            return sw.Elapsed;
         }
 
         static object PrimitiveCast(object val, Type T, TypeCode t, byte[] bytes)

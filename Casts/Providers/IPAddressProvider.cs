@@ -6,19 +6,10 @@ namespace Casts.Providers
 {
     class IPAddressProvider : ICastProvider
     {
-        public override object Cast(object val, Type T)
-        {
-            if (T.Name == nameof(IPAddress) && val is string)
-            {
-                return IPAddress.Parse(val.ToString());
-            }
-            return null;
-        }
-
         public override byte[] ToBinary(object obj)
         {
-            var c = (IPAddress) obj;
-            return c.GetAddressBytes();
+            var c = obj as IPAddress;
+            return c?.GetAddressBytes();
         }
 
         public override object FromBinary(byte[] raw, Type to)

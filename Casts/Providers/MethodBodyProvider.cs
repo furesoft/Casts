@@ -9,15 +9,14 @@ namespace Casts.Providers
 {
     class MethodBodyProvider : ICastProvider
     {
-        public override object Cast(object val, Type T)
+        public override byte[] ToBinary(object obj)
         {
-            if (T.Name == typeof (byte[]).Name && val is Delegate)
+            if (obj is Delegate)
             {
-                var del = (Delegate) val;
+                var del = (Delegate)obj;
                 var methodBody = del.Method?.GetMethodBody();
                 if (methodBody != null) return methodBody.GetILAsByteArray();
             }
-
             return null;
         }
     }
