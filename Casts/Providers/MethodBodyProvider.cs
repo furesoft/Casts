@@ -20,26 +20,5 @@ namespace Casts.Providers
 
             return null;
         }
-
-        private Type[] GetParamterTypes(Type T)
-        {
-            if (T.Name.StartsWith("Action")) return T.GenericTypeArguments;
-            if (T.Name.StartsWith("Func"))
-            {
-                var args = T.GenericTypeArguments.Reverse().ToList();
-                args.RemoveAt(0);
-                args.Reverse();
-                return args.ToArray();
-            }
-
-            return null;
-        }
-        private Type GetReturnType(Type T)
-        {
-            if (T.Name.StartsWith("Action")) return typeof (void);
-            if (T.Name.StartsWith("Func")) return T.GenericTypeArguments.Last();
-
-            return typeof (void);
-        }
     }
 }

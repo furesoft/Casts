@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Numerics;
 using Casts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,7 +51,7 @@ namespace Cast.Test
             var rd = reinterprete_cast<double>(rl);
             var rbi = reinterprete_cast<BigInteger>(rl);
             var L = reinterprete_cast<long>(123);
-            var bL = reinterprete_cast<long>(f);
+            var bL = reinterprete_cast<long>(f); 
 
             var c = reinterprete_cast<uint>(uint.MaxValue);
             var cr = reinterprete_cast<int>(c);
@@ -71,8 +72,8 @@ namespace Cast.Test
             var sD = reinterprete_cast<Mini>(sL);
 
             var same = reinterprete_cast<int>(1234);
-            var call = reinterprete_cast<Action<string>>(sD);
-            call("Object to Delegate");
+            var call = reinterprete_cast<Action>(sD);
+            call();
 
             var expr = reinterprete_cast<Expression>(call);
 
@@ -93,13 +94,17 @@ namespace Cast.Test
             var pDT = reinterprete_cast<DateTime>(rep*15963583);
 
             Action act;
-            var succes = trycast(pDT, out act);
+            var succes = trycast(rep, out act);
 
             var s = new Size();
             s.Height = 125;
             s.Width = 852;
 
             var castedPoint = reinterprete_cast<Point>(s);
+            var ip = reinterprete_cast<IPAddress>("127.0.0.1");
+
+            var ipL = reinterprete_cast<int>(ip);
+            var ipP = reinterprete_cast<IPAddress>(ipL);
         }
     }
 
@@ -221,7 +226,7 @@ namespace Cast.Test
 
         public static explicit operator Delegate(Mini raw)
         {
-            return new Action<string>((_) => Debug.WriteLine(_));
+            return new Action(() => Debug.WriteLine(raw.val));
         }
     }
 }

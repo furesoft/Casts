@@ -11,7 +11,7 @@ namespace Casts.Providers
 
             if (dlg != null && T.Name == nameof(ICallable))
             {
-                return new DynamicCallable(dlg);
+                return (ICallable)new DynamicCallable(dlg);
             }
             if (callb != null && callb is DynamicCallable)
             {

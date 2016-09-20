@@ -11,7 +11,6 @@ namespace Casts
 {
     public static class Casts
     {
-        public static bool OnlyUnsafeContext { get; set; } = true;
         public static List<ICastProvider> Providers = new List<ICastProvider>();
 
         public static event Action<Exception> OnError;
@@ -35,6 +34,7 @@ namespace Casts
             Providers.Add(new BigIntegerProvider());
             Providers.Add(new ColorProvider());
             Providers.Add(new RectangleProvider());
+            Providers.Add(new IPAddressProvider());
         }
 
         #region Multiple Cast
@@ -70,14 +70,13 @@ namespace Casts
             try
             {
                 int size = Marshal.SizeOf(obj);
-                byte[] buffer = new byte[size];
-
+                
                 IntPtr ptr = Marshal.AllocHGlobal(size);
                 Marshal.StructureToPtr(obj, ptr, true);
-                Marshal.Copy(ptr, buffer, 0, size);
 
                 var res = (T) Marshal.PtrToStructure(ptr, typeof (T));
                 Marshal.FreeHGlobal(ptr);
+                
                 return res;
             }
             catch (Exception ex)
@@ -87,7 +86,6 @@ namespace Casts
 
             return default(T);
         }
-
 
 #if RELEASE
         [DebuggerStepThrough]
