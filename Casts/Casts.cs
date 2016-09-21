@@ -14,13 +14,6 @@ namespace Casts
     {
         public static List<ICastProvider> Providers = new List<ICastProvider>();
 
-        public static event Action<Exception> OnError;
-
-        static void RaiseOnError(Exception ex)
-        {
-            OnError?.Invoke(ex);
-        }
-
         static Casts()
         {
             Providers.Add(new SizeProvider());
@@ -79,7 +72,7 @@ namespace Casts
             }
             catch (Exception ex)
             {
-                RaiseOnError(ex);
+                
             }
 
             return default(T);
@@ -94,9 +87,10 @@ namespace Casts
             
             //primtive
             var t = Type.GetTypeCode(T);
-
+            
             if (bytes != null)
             {
+                
                 if (t != TypeCode.String)
                 {
                     if (bytes.Length <= 8)
@@ -109,17 +103,20 @@ namespace Casts
                     }
                 }
 
+                var primitive = PrimitiveCast(val, T, t, bytes);
+                if (primitive != null) return primitive;
+
+                var del = DelegateCast(val, T);
+                if (del != null) return del;
+
                 foreach (var castProvider in Providers)
                 {
                     var ret = castProvider.FromBinary(bytes, T);
                     if (ret != null) return ret;
                 }
-
-                var primitive = PrimitiveCast(val, T, t, bytes);
-                if(primitive != null) return primitive;
             }
             
-            RaiseOnError(new InvalidCastException($"Cant cast from '{val.GetType().Name}' to '{T.Name}'"));
+            throw (new InvalidCastException($"Cant cast from '{val.GetType().Name}' to '{T.Name}'"));
             return null;
         }
 
@@ -184,6 +181,27 @@ namespace Casts
                     }
                     break;
             }
+            return null;
+        }
+
+        static object DelegateCast(object val, Type T)
+        {
+            if (T?.Name == nameof(Delegate) || T.BaseType?.Name == nameof(MulticastDelegate))
+            {
+                var m = val.GetType().GetMethods();
+                var s =
+                    m.Where(
+                        _ =>
+                            _.ReturnType.Name == nameof(Delegate) &&
+                            _.GetParameters().FirstOrDefault()?.ParameterType.Name == val.GetType().Name);
+
+                if (s.Any())
+                {
+                    var call = (Delegate)s.FirstOrDefault().Invoke(null, new object[] { val });
+                    return call;
+                }
+            }
+
             return null;
         }
 

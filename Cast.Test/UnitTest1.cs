@@ -3,12 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Numerics;
-using Casts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Casts.Casts;
 
@@ -17,16 +13,17 @@ namespace Cast.Test
     [TestClass]
     public class UnitTest1
     {
-        [TestMethod]
-        public void reinterpret_test()
+        public static void Main()
         {
-            OnError += (e) =>
-            {
-                Debug.WriteLine(e.Message);
-            };
+            new UnitTest1().Test();    
+        }
+
+        [TestMethod]
+        public void Test()
+        {
             //time test
-            var timeL = Time(()=> { var l = (long) 123; });
-            var timeI = Time(() => { var l = (int)123L; });
+            var timeL = Time(() => { var l = (long) 123; });
+            var timeI = Time(() => { var l = (int) 123L; });
 
             var timeRL = Time(() => { reinterprete_cast<long>(123); });
             var timeRI = Time(() => { reinterprete_cast<int>(123L); });
@@ -36,7 +33,7 @@ namespace Cast.Test
             ba.SetAll(true);
 
             var baI = reinterprete_cast<int>(ba);
-            var Iba = reinterprete_cast<BitArray>((short)255);
+            var Iba = reinterprete_cast<BitArray>((short) 255);
 
             //bytes test
             var raw = new byte[] {1, 5, 255, 3, 4, 10, 15, 2, 3, 5};
@@ -65,7 +62,7 @@ namespace Cast.Test
             var rd = reinterprete_cast<double>(rl);
             var rbi = reinterprete_cast<BigInteger>(rl);
             var L = reinterprete_cast<long>(123);
-            var bL = reinterprete_cast<long>(f); 
+            var bL = reinterprete_cast<long>(f);
 
             var c = reinterprete_cast<uint>(uint.MaxValue);
             var cr = reinterprete_cast<int>(c);
@@ -82,7 +79,7 @@ namespace Cast.Test
             var same = reinterprete_cast<int>(1234);
             var call = reinterprete_cast<Action>(sD);
             call();
-           
+
             var rp = new Vector2(10, 10);
             var lp = reinterprete_cast<long>(rp);
             var rep = reinterprete_cast<Vector2>(lp);
@@ -110,8 +107,6 @@ namespace Cast.Test
             var ipL = reinterprete_cast<int>(ip);
             var ipP = reinterprete_cast<IPAddress>(ipL);
         }
-
-        
     }
 
     public struct Vector2
@@ -128,7 +123,7 @@ namespace Cast.Test
 
         public override int GetHashCode()
         {
-            return new { X, Y }.GetHashCode();
+            return new {X, Y}.GetHashCode();
         }
 
         public override string ToString()
@@ -146,7 +141,7 @@ namespace Cast.Test
         {
             double dX = X - p2.X;
             double dY = Y - p2.Y;
-            double multi = dX * dX + dY * dY;
+            double multi = dX*dX + dY*dY;
             double rad = Math.Round(Math.Sqrt(multi), 3);
 
             return rad;
@@ -171,6 +166,7 @@ namespace Cast.Test
         {
             return a.X < b.X && a.Y < b.Y;
         }
+
         public static bool operator >(Vector2 a, Vector2 b)
         {
             return a.X > b.X && a.Y > b.Y;
@@ -192,7 +188,7 @@ namespace Cast.Test
             return new Vector2 {X = x, Y = y};
         }
 
-        public static explicit operator byte[] (Vector2 m)
+        public static explicit operator byte[](Vector2 m)
         {
             var buf = new List<byte>();
             buf.AddRange(BitConverter.GetBytes(m.X));
