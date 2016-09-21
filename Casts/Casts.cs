@@ -34,8 +34,8 @@ namespace Casts
 #endif
         public static Tuple<T, U> pair_cast<T, U>(object o)
         {
-            var f = reinterprete_cast<T>(o);
-            var s = reinterprete_cast<U>(o);
+            var f = reinterpret_cast<T>(o);
+            var s = reinterpret_cast<U>(o);
 
             return new Tuple<T, U>(f, s);
         }
@@ -47,7 +47,7 @@ namespace Casts
         {
             foreach (var r in src)
             {
-                yield return reinterprete_cast<Out>(r);
+                yield return reinterpret_cast<Out>(r);
             }
         }
         #endregion
@@ -81,7 +81,7 @@ namespace Casts
 #if RELEASE
         [DebuggerStepThrough]
 #endif
-        static object reinterprete_cast(object val, Type T)
+        static object reinterpret_cast(object val, Type T)
         {
             byte[] bytes = GetBytes(val);
             
@@ -208,16 +208,16 @@ namespace Casts
 #if RELEASE
         [DebuggerStepThrough]
 #endif
-        public static T reinterprete_cast<T>(object v)
+        public static T reinterpret_cast<T>(object v)
         {
-            return (T) reinterprete_cast(v, typeof (T));
+            return (T) reinterpret_cast(v, typeof (T));
         }
 
         public static bool trycast<T>(object o, out T value)
         {
             try
             {
-                value = reinterprete_cast<T>(o);
+                value = reinterpret_cast<T>(o);
                 return value != null;
             }
             catch (Exception)

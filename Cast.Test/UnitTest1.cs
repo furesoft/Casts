@@ -25,21 +25,21 @@ namespace Cast.Test
             var timeL = Time(() => { var l = (long) 123; });
             var timeI = Time(() => { var l = (int) 123L; });
 
-            var timeRL = Time(() => { reinterprete_cast<long>(123); });
-            var timeRI = Time(() => { reinterprete_cast<int>(123L); });
+            var timeRL = Time(() => { reinterpret_cast<long>(123); });
+            var timeRI = Time(() => { reinterpret_cast<int>(123L); });
 
             //bitarray test
             var ba = new BitArray(32);
             ba.SetAll(true);
 
-            var baI = reinterprete_cast<int>(ba);
-            var Iba = reinterprete_cast<BitArray>((short) 255);
-
+            var baI = reinterpret_cast<int>(ba);
+            var Iba = reinterpret_cast<BitArray>((short) 255);
+            
             //bytes test
             var raw = new byte[] {1, 5, 255, 3, 4, 10, 15, 2, 3, 5};
 
             var prim = struct_cast<int>(uint.MaxValue);
-            var test = reinterprete_cast<long>(123);
+            var test = reinterpret_cast<long>(123);
 
             var mul = pair_cast<int, short>(test);
             var list = sequence_cast<byte[], int>(new[] {1, 526, 5, 8});
@@ -48,51 +48,51 @@ namespace Cast.Test
 
             var lim = struct_cast<Vector2>(new Mini(12));
 
-            var r = reinterprete_cast<double>(raw);
+            var r = reinterpret_cast<double>(raw);
 
-            var rf = reinterprete_cast<double>(raw);
-            var rI = reinterprete_cast<int>(raw);
+            var rf = reinterpret_cast<double>(raw);
+            var rI = reinterpret_cast<int>(raw);
 
-            var iR = reinterprete_cast<byte[]>(rI);
-            var fR = reinterprete_cast<byte[]>(rf);
+            var iR = reinterpret_cast<byte[]>(rI);
+            var fR = reinterpret_cast<byte[]>(rf);
 
             BigInteger f = 16666666666666666666;
-            var ri = reinterprete_cast<int>(f);
-            var rl = reinterprete_cast<float>(ri);
-            var rd = reinterprete_cast<double>(rl);
-            var rbi = reinterprete_cast<BigInteger>(rl);
-            var L = reinterprete_cast<long>(123);
-            var bL = reinterprete_cast<long>(f);
+            var ri = reinterpret_cast<int>(f);
+            var rl = reinterpret_cast<float>(ri);
+            var rd = reinterpret_cast<double>(rl);
+            var rbi = reinterpret_cast<BigInteger>(rl);
+            var L = reinterpret_cast<long>(123);
+            var bL = reinterpret_cast<long>(f);
 
-            var c = reinterprete_cast<uint>(uint.MaxValue);
-            var cr = reinterprete_cast<int>(c);
-            var u = reinterprete_cast<uint>(-1);
+            var c = reinterpret_cast<uint>(uint.MaxValue);
+            var cr = reinterpret_cast<int>(c);
+            var u = reinterpret_cast<uint>(-1);
 
 
             var g = Guid.NewGuid();
-            var rGu = reinterprete_cast<byte[]>(g);
-            var iGu = reinterprete_cast<Guid>(rGu);
+            var rGu = reinterpret_cast<byte[]>(g);
+            var iGu = reinterpret_cast<Guid>(rGu);
 
-            var sL = reinterprete_cast<byte[]>(new Mini(12));
-            var sD = reinterprete_cast<Mini>(sL);
+            var sL = reinterpret_cast<byte[]>(new Mini(12));
+            var sD = reinterpret_cast<Mini>(sL);
 
-            var same = reinterprete_cast<int>(1234);
-            var call = reinterprete_cast<Action>(sD);
+            var same = reinterpret_cast<int>(1234);
+            var call = reinterpret_cast<Action>(sD);
             call();
 
             var rp = new Vector2(10, 10);
-            var lp = reinterprete_cast<long>(rp);
-            var rep = reinterprete_cast<Vector2>(lp);
+            var lp = reinterpret_cast<long>(rp);
+            var rep = reinterpret_cast<Vector2>(lp);
             var dis = rp.Distance(++rep);
 
-            var repC = reinterprete_cast<Action>(rep);
+            var repC = reinterpret_cast<Action>(rep);
             repC();
 
-            var body = reinterprete_cast<byte[]>(call);
+            var body = reinterpret_cast<byte[]>(call);
 
-            var dtR = reinterprete_cast<ulong>(DateTime.Now);
-            var dtN = reinterprete_cast<DateTime>(rGu);
-            var pDT = reinterprete_cast<DateTime>(rep*15963583);
+            var dtR = reinterpret_cast<ulong>(DateTime.Now);
+            var dtN = reinterpret_cast<DateTime>(rGu);
+            var pDT = reinterpret_cast<DateTime>(rep*15963583);
 
             Action act;
             var succes = trycast(rep, out act);
@@ -101,11 +101,11 @@ namespace Cast.Test
             s.Height = 125;
             s.Width = 852;
 
-            var castedPoint = reinterprete_cast<Point>(s);
-            var ip = reinterprete_cast<IPAddress>("127.0.0.1");
+            var castedPoint = reinterpret_cast<Point>(s);
+            var ip = reinterpret_cast<IPAddress>("127.0.0.1");
 
-            var ipL = reinterprete_cast<int>(ip);
-            var ipP = reinterprete_cast<IPAddress>(ipL);
+            var ipL = reinterpret_cast<int>(ip);
+            var ipP = reinterpret_cast<IPAddress>(ipL);
         }
     }
 
