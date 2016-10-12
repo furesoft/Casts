@@ -55,8 +55,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Mini.cs" />
+    <Compile Include="Phone.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Vector2.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Casts\Casts.csproj">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace Casts
             if (bytes != null)
             {
                 
-                if (t != TypeCode.String)
+                if (t != TypeCode.String && T.Name != nameof(BitArray))
                 {
                     if (bytes.Length <= 8)
                     {

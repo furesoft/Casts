@@ -1,10 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Casts.Casts;
 
@@ -29,10 +30,11 @@ namespace Cast.Test
             var timeRI = Time(() => { reinterpret_cast<int>(123L); });
 
             //bitarray test
-            var ba = new BitArray(32);
+            var ba = new BitArray(16);
             ba.SetAll(true);
+            ba.Parse("0001 0011");
 
-            var baI = reinterpret_cast<int>(ba);
+            var baI = reinterpret_cast<ushort>(ba);
             var Iba = reinterpret_cast<BitArray>((short) 255);
             
             //bytes test
@@ -68,7 +70,6 @@ namespace Cast.Test
             var cr = reinterpret_cast<int>(c);
             var u = reinterpret_cast<uint>(-1);
 
-
             var g = Guid.NewGuid();
             var rGu = reinterpret_cast<byte[]>(g);
             var iGu = reinterpret_cast<Guid>(rGu);
@@ -102,133 +103,29 @@ namespace Cast.Test
             s.Width = 852;
 
             var castedPoint = reinterpret_cast<Point>(s);
-            var ip = reinterpret_cast<IPAddress>("127.0.0.1");
 
-            var ipL = reinterpret_cast<int>(ip);
+            var ipL = reinterpret_cast<int>(IPAddress.Parse("127.0.0.1"));
             var ipP = reinterpret_cast<IPAddress>(ipL);
+
+            var ph = new Phone();
+            ph.Vorwahl = 497952;
+            ph.Number = 6771;
+
+            var PhR = reinterpret_cast<byte[]>(ph);
+            var phone = reinterpret_cast<Phone>(PhR);
         }
     }
 
-    public struct Vector2
+    public static class Extensions
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public static Vector2 Empty => new Vector2();
-
-        public Vector2(int x, int y)
+        public static void Parse(this BitArray ba, string pattern)
         {
-            X = x;
-            Y = y;
-        }
+            var spl = pattern.Replace(" ", "").ToCharArray();
 
-        public override int GetHashCode()
-        {
-            return new {X, Y}.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return $"[{X}:{Y}]";
-        }
-
-        public override bool Equals(object obj)
-        {
-            var tmp = (Vector2) obj;
-            return tmp.X == X && tmp.Y == Y;
-        }
-
-        public double Distance(Vector2 p2)
-        {
-            double dX = X - p2.X;
-            double dY = Y - p2.Y;
-            double multi = dX*dX + dY*dY;
-            double rad = Math.Round(Math.Sqrt(multi), 3);
-
-            return rad;
-        }
-
-        public static Vector2 operator ++(Vector2 p)
-        {
-            p.X++;
-            p.Y++;
-            return p;
-        }
-
-        public static Vector2 operator *(Vector2 v, int mul)
-        {
-            v.X *= mul;
-            v.Y *= mul;
-
-            return v;
-        }
-
-        public static bool operator <(Vector2 a, Vector2 b)
-        {
-            return a.X < b.X && a.Y < b.Y;
-        }
-
-        public static bool operator >(Vector2 a, Vector2 b)
-        {
-            return a.X > b.X && a.Y > b.Y;
-        }
-
-        public static Vector2 operator -(Vector2 a, Vector2 b)
-        {
-            a.X -= b.X;
-            a.Y -= b.Y;
-
-            return a;
-        }
-
-        public static explicit operator Vector2(byte[] raw)
-        {
-            var x = BitConverter.ToInt32(raw, 0);
-            var y = BitConverter.ToInt32(raw, 4);
-
-            return new Vector2 {X = x, Y = y};
-        }
-
-        public static explicit operator byte[](Vector2 m)
-        {
-            var buf = new List<byte>();
-            buf.AddRange(BitConverter.GetBytes(m.X));
-            buf.AddRange(BitConverter.GetBytes(m.Y));
-            return buf.ToArray();
-        }
-
-        public static explicit operator Delegate(Vector2 raw)
-        {
-            return new Action(() => Debug.WriteLine(raw));
-        }
-    }
-
-    struct Mini
-    {
-        readonly ushort val;
-
-        public Mini(ushort v)
-        {
-            val = (ushort) (v & 0xC);
-        }
-
-        public override string ToString()
-        {
-            return val.ToString();
-        }
-
-        public static explicit operator Mini(byte[] raw)
-        {
-            return new Mini(BitConverter.ToUInt16(raw, 0));
-        }
-
-        public static explicit operator byte[](Mini m)
-        {
-            return BitConverter.GetBytes(m.val);
-        }
-
-        public static explicit operator Delegate(Mini raw)
-        {
-            return new Action(() => Debug.WriteLine(raw.val));
+            for (int i = 0; i < spl.Length; i++)
+            {
+                ba[i] = bool.Parse(pattern[i].ToString());
+            }
         }
     }
 }
