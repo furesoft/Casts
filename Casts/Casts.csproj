@@ -52,11 +52,7 @@
     <Compile Include="Providers\DateTimeProvider.cs" />
     <Compile Include="Providers\GuidProvider.cs" />
     <Compile Include="Providers\IPAddressProvider.cs" />
-    <Compile Include="Providers\MethodBodyProvider.cs" />
-    <Compile Include="Providers\ColorProvider.cs" />
-    <Compile Include="Providers\RectangleProvider.cs" />
-    <Compile Include="Providers\PointProvider.cs" />
-    <Compile Include="Providers\SizeProvider.cs" />
+    <Compile Include="Providers\StructProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

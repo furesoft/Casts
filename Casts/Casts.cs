@@ -17,66 +17,12 @@ namespace Casts
 
         static Casts()
         {
-            Providers.Add(new SizeProvider());
-            Providers.Add(new PointProvider());
+            Providers.Add(new StructProvider());
             Providers.Add(new GuidProvider());
-            Providers.Add(new MethodBodyProvider());
             Providers.Add(new DateTimeProvider());
             Providers.Add(new BigIntegerProvider());
-            Providers.Add(new ColorProvider());
-            Providers.Add(new RectangleProvider());
             Providers.Add(new IPAddressProvider());
             Providers.Add(new BitArrayProvider());
-        }
-
-        #region Multiple Cast
-#if RELEASE
-        [DebuggerStepThrough]
-#endif
-        public static Tuple<T, U> pair_cast<T, U>(object o)
-        {
-            var f = reinterpret_cast<T>(o);
-            var s = reinterpret_cast<U>(o);
-
-            return new Tuple<T, U>(f, s);
-        }
-
-#if RELEASE
-        [DebuggerStepThrough]
-#endif
-        public static IEnumerable<Out> sequence_cast<Out, In>(IEnumerable<In> src)
-        {
-            foreach (var r in src)
-            {
-                yield return reinterpret_cast<Out>(r);
-            }
-        }
-        #endregion
-
-#if RELEASE
-        [DebuggerStepThrough]
-#endif
-        public static T struct_cast<T>(object obj)
-            where T : struct
-        {
-            try
-            {
-                int size = Marshal.SizeOf(obj);
-                
-                IntPtr ptr = Marshal.AllocHGlobal(size);
-                Marshal.StructureToPtr(obj, ptr, true);
-
-                var res = (T) Marshal.PtrToStructure(ptr, typeof (T));
-                Marshal.FreeHGlobal(ptr);
-                
-                return res;
-            }
-            catch (Exception ex)
-            {
-                
-            }
-
-            return default(T);
         }
 
 #if RELEASE
@@ -106,9 +52,6 @@ namespace Casts
 
                 var primitive = PrimitiveCast(val, T, t, bytes);
                 if (primitive != null) return primitive;
-
-                var del = DelegateCast(val, T);
-                if (del != null) return del;
 
                 foreach (var castProvider in Providers)
                 {
@@ -185,47 +128,12 @@ namespace Casts
             return null;
         }
 
-        static object DelegateCast(object val, Type T)
-        {
-            if (T?.Name == nameof(Delegate) || T.BaseType?.Name == nameof(MulticastDelegate))
-            {
-                var m = val.GetType().GetMethods();
-                var s =
-                    m.Where(
-                        _ =>
-                            _.ReturnType.Name == nameof(Delegate) &&
-                            _.GetParameters().FirstOrDefault()?.ParameterType.Name == val.GetType().Name);
-
-                if (s.Any())
-                {
-                    var call = (Delegate)s.FirstOrDefault().Invoke(null, new object[] { val });
-                    return call;
-                }
-            }
-
-            return null;
-        }
-
 #if RELEASE
         [DebuggerStepThrough]
 #endif
         public static T reinterpret_cast<T>(object v)
         {
             return (T) reinterpret_cast(v, typeof (T));
-        }
-
-        public static bool trycast<T>(object o, out T value)
-        {
-            try
-            {
-                value = reinterpret_cast<T>(o);
-                return value != null;
-            }
-            catch (Exception)
-            {
-                value = default(T);
-            }
-            return false;
         }
 
         static byte[] GetBytes(object val)
