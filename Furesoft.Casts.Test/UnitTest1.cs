@@ -1,11 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections;
-using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static Casts.Casts;
 
@@ -14,11 +11,6 @@ namespace Cast.Test
     [TestClass]
     public class UnitTest1
     {
-        public static void Main()
-        {
-            new UnitTest1().Test();    
-        }
-
         [TestMethod]
         public void Test()
         {
@@ -97,7 +89,7 @@ namespace Cast.Test
 
             var ph = new Phone();
             ph.Vorwahl = 497952;
-            ph.Number = 6771;
+            ph.Number = 52365;
 
             var PhR = reinterpret_cast<byte[]>(ph);
             var phone = reinterpret_cast<Phone>(PhR);

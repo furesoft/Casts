@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Casts.Providers
 {
@@ -10,7 +7,7 @@ namespace Casts.Providers
     {
         public override object FromBinary(byte[] raw, Type to)
         {
-            if (to?.BaseType?.Name == nameof(ValueType))
+            if (to.IsValueType)
             {
                 int size = Marshal.SizeOf(to);
 

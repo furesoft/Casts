@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Casts.Providers;
 
-// ReSharper disable All
-
 namespace Casts
 {
     public static class Casts
@@ -17,12 +15,12 @@ namespace Casts
 
         static Casts()
         {
-            Providers.Add(new StructProvider());
             Providers.Add(new GuidProvider());
             Providers.Add(new DateTimeProvider());
             Providers.Add(new BigIntegerProvider());
             Providers.Add(new IPAddressProvider());
             Providers.Add(new BitArrayProvider());
+            Providers.Add(new StructProvider());
         }
 
 #if RELEASE
