@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Casts.Providers;
 
-// ReSharper disable All
-
 namespace Casts
 {
     public static class Casts
